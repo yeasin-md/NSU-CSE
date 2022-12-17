@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
+
 struct Store
 {
     int productId;
@@ -176,6 +178,7 @@ void addnewProduct()
 
     FILE *fp;
     fp = fopen("products.txt", "a");
+    rand(time(0));
     int id, items;
     int r = rand() % 200;
     if (fp == NULL)
