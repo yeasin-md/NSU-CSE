@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <math.h>
 struct Store
 {
     int productId;
@@ -131,7 +131,7 @@ void viewUsers()
 
 void viewAllProducts()
 {
-
+    int totalProductCount = 0;
     FILE *fp;
     fp = fopen("products.txt", "r");
     struct Store p1;
@@ -142,6 +142,9 @@ void viewAllProducts()
     }
     else
     {
+        printf("---------------------------------------------------\n");
+        printf("|           All Products In Store:                |\n");
+        printf("---------------------------------------------------\n");
         while (fread(&p1, sizeof(struct Store), 1, fp))
         {
 
@@ -158,7 +161,11 @@ void viewAllProducts()
             }
             printf("\n");
             printf("\n");
+            totalProductCount++;
         }
+        printf("------------------------\n");
+        printf("|  Total Product/s: %d  |\n", totalProductCount);
+        printf("------------------------\n");
 
         fclose(fp);
     }
@@ -166,12 +173,11 @@ void viewAllProducts()
 
 void addnewProduct()
 {
-    struct Store item[2];
 
     FILE *fp;
-    fp = fopen("products.txt", "w");
-    int i, j, id;
-
+    fp = fopen("products.txt", "a");
+    int id, items;
+    int r = rand() % 200;
     if (fp == NULL)
     {
         fprintf(stderr, "Can't open the file");
@@ -179,10 +185,14 @@ void addnewProduct()
     }
     else
     {
+        printf("Enter Number of items to be added: ");
+        scanf("%d", &items);
 
-        for (i = 0; i < 2; i++)
+        struct Store item[items];
+
+        for (int i = 0; i < items; i++)
         {
-            id = i + 1;
+            id = r + i;
             item[i].productId = id;
 
             printf("Product Id: %d\n", item[i].productId);
@@ -195,14 +205,14 @@ void addnewProduct()
             printf("Enter stock: ");
             scanf("%d", &item[i].stock);
             printf("Enter size: ");
-            for (j = 0; j < 3; j++)
+            for (int j = 0; j < 3; j++)
             {
                 scanf(" %c", &item[i].size[j]);
             }
             printf("\n");
         }
 
-        for (int k = 0; k < 2; k++)
+        for (int k = 0; k < items; k++)
         {
             fwrite(&item[k], sizeof(struct Store), 1, fp);
         }
@@ -211,4 +221,3 @@ void addnewProduct()
         fclose(fp);
     }
 }
-
