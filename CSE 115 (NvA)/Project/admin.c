@@ -10,20 +10,164 @@ struct Store
     int offer_price;
     int stock;
     char size[3];
-} item[2];
+};
 
-void add_input();
+void welcome();
+void admin_login();
+void menu();
+int navigation;
+
+// dashboard with utilities===
+void dashBoard();
+void viewBalance();
+void viewOrders();
+void viewUsers();
+void viewAllProducts();
+void addnewProduct();
 
 int main()
 {
-
-    add_input();
+    // logging in to enter the dashboard===
+    admin_login();
+    // dashBoard();
 
     return 0;
 }
 
-void add_input()
+void welcome()
 {
+
+    printf("----------------------------------------------------\n");
+    printf("|              **Welcome**                         |\n");
+    printf("|            **Online Store**                      |\n");
+    printf("|               Dashboard                          |\n");
+    printf("|                                                  |\n");
+    printf("----------------------------------------------------\n");
+}
+
+void admin_login()
+{
+    char userName[20] = "admin", getUser[20];
+    char password[20] = "admin123", getPass[20];
+
+    // getting userId and pass from user===
+    puts("\n****Please Login first to continue***");
+    printf("Username: ");
+    scanf("%s", &getUser);
+    printf("Password: ");
+    scanf("%s", &getPass);
+
+    // validating userId and Pass to continue===
+    if (strcmp(userName, getUser) != 0 || strcmp(password, getPass) != 0)
+    {
+        puts("Username or Password is incorrect");
+    }
+    else
+    {
+        welcome();
+        menu(); // shwoing menu to user===
+    }
+}
+
+void menu()
+{
+    // int num;
+    puts("1. View Balance");
+    puts("2. View Orders");
+    puts("3. View Users");
+    puts("4. View All Products");
+    puts("5. Add New Product/s");
+    puts("6. Exit");
+
+    printf("Enter the number you want to navigate to: ");
+    scanf("%d", &navigation);
+    // navigation = num;
+
+    dashBoard();
+}
+
+void dashBoard()
+{
+    switch (navigation)
+    {
+
+    case 1:
+        viewBalance();
+        break;
+    case 2:
+        viewOrders();
+        break;
+    case 3:
+        viewUsers();
+        break;
+    case 4:
+        viewAllProducts();
+        break;
+    case 5:
+        addnewProduct();
+        break;
+    case 6:
+
+        break;
+    default:
+        break;
+    }
+}
+
+void viewBalance()
+{
+    puts("Teka Nai");
+}
+
+void viewOrders()
+{
+    puts("Order Nai");
+}
+
+void viewUsers()
+{
+    puts("User Nai");
+}
+
+void viewAllProducts()
+{
+
+    FILE *fp;
+    fp = fopen("products.txt", "r");
+    struct Store p1;
+    if (fp == NULL)
+    {
+        fprintf(stderr, "Can't open the file");
+        exit(1);
+    }
+    else
+    {
+        while (fread(&p1, sizeof(struct Store), 1, fp))
+        {
+
+            printf("pId: %d\n", p1.productId);
+            printf("Product Name: %s\n", p1.item_name);
+            printf("Price: %d\n", p1.price);
+            printf("Discount: %d\n", p1.offer_price);
+            printf("Price: %d\n", p1.price);
+            printf("Quantity: %d\n", p1.stock);
+            printf("Size: ");
+            for (int j = 0; j < 3; j++)
+            {
+                p1.size[j] != '.' ? printf("%c ", p1.size[j]) : printf("");
+            }
+            printf("\n");
+            printf("\n");
+        }
+
+        fclose(fp);
+    }
+}
+
+void addnewProduct()
+{
+    struct Store item[2];
+
     FILE *fp;
     fp = fopen("products.txt", "w");
     int i, j, id;
@@ -67,3 +211,4 @@ void add_input()
         fclose(fp);
     }
 }
+
