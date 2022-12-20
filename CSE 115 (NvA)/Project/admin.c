@@ -3,7 +3,6 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
-
 struct Store
 {
     int productId;
@@ -13,7 +12,14 @@ struct Store
     int stock;
     char size[3];
 };
-
+struct Cart
+{
+    int pId;
+    char itemName[20];
+    int price;
+    int qty;
+    int total_pCost;
+};
 void welcome();
 void admin_login();
 void menu();
@@ -123,7 +129,18 @@ void viewBalance()
 
 void viewOrders()
 {
-    puts("Order Nai");
+    FILE *of;
+    of = fopen("./db/orders.txt", "r");
+    struct Cart cart;
+
+    while (fread(&cart, sizeof(struct Store), 1, of))
+    {
+        printf("Product Id: %d\n", cart.pId);
+        printf("Product Name: %s\n", cart.itemName);
+        printf("Product Price: %d\n", cart.price);
+        printf("Product Qty: %d\n", cart.qty);
+        printf("Product Total Cost: %d\n", cart.total_pCost);
+    }
 }
 
 void viewUsers()
@@ -135,7 +152,7 @@ void viewAllProducts()
 {
     int totalProductCount = 0;
     FILE *fp;
-    fp = fopen("products.txt", "r");
+    fp = fopen("./db/products.txt", "r");
     struct Store p1;
     if (fp == NULL)
     {
@@ -177,9 +194,10 @@ void addnewProduct()
 {
 
     FILE *fp;
-    fp = fopen("products.txt", "a");
-    rand(time(0));
+    fp = fopen("./db/products.txt", "a");
+    srand(time(0));
     int id, items;
+
     int r = rand() % 200;
     if (fp == NULL)
     {
