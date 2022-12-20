@@ -11,8 +11,41 @@ struct Store
     int stock;
     char size[3];
 };
-void showProducts();
+struct Cart
+{
+    int pId;
+    char itemName[20];
+    int price;
+    int qty;
+    int total_pCost;
+};
+
+struct Order
+{
+    int orderId;
+    char userName[20];
+    struct OrderedProducts
+    {
+        int pId;
+        char itemName[20];
+        int price;
+        int quantity;
+        int totalPrice;
+    };
+    char orderType[20];
+};
+
+struct User
+{
+    char user[20];
+    int userId;
+    char userPassword[20];
+};
+
 void welcome();
+void showProducts();
+void cart();
+
 int main()
 {
     welcome();
@@ -20,11 +53,21 @@ int main()
 
     return 0;
 }
+void welcome()
+{
+    printf("----------------------------------------------------\n");
+    printf("|              **Welcome**                         |\n");
+    printf("|            **Online Store**                      |\n");
+    printf("|           One Step Sollution                     |\n");
+    printf("|                                                  |\n");
+    printf("----------------------------------------------------\n");
+}
 
+// showing products====
 void showProducts()
 {
     FILE *fp;
-    fp = fopen("products.txt", "r");
+    fp = fopen("./db/products.txt", "r");
     struct Store p1;
     if (fp == NULL)
     {
@@ -53,9 +96,60 @@ void showProducts()
 
         fclose(fp);
     }
+    // adding product to cart using product id====
+    cart();
 };
 
-void welcome()
+// adding items to cart====
+void cart()
 {
-    printf("---------Online Store--------\n");
+    FILE *fp;
+    FILE *od;
+    fp = fopen("./db/products.txt", "r");
+    od = fopen("./db/orders.txt", "w");
+    struct Store ct;
+    struct Cart cart;
+    int addTocart_pId;
+    char add;
+    printf("Enter Product Id to add to cart: ");
+    scanf("%d", &addTocart_pId);
+    puts("Your searched item: ");
+    while (fread(&ct, sizeof(struct Store), 1, fp))
+    {
+
+        if (ct.productId == addTocart_pId)
+        {
+            printf("pId: %d\n", ct.productId);
+            printf("Product Name: %s\n", ct.item_name);
+            printf("Price: %d\n", ct.price);
+            printf("Discount: %d\n", ct.offer_price);
+            printf("Price: %d\n", ct.price);
+            printf("Quantity: %d\n", ct.stock);
+            printf("Size: ");
+            for (int j = 0; j < 3; j++)
+            {
+                ct.size[j] != '.' ? printf("%c ", ct.size[j]) : printf("");
+            }
+            printf("\n");
+            printf("\n");
+
+            printf("Enter 'y' to add this item to cart: ");
+            scanf(" %c", &add);
+
+            if (add == 'y')
+            {
+                cart.pId = ct.productId;
+                cart.itemName[20] = ct.item_name[20];
+                cart.price = ct.price;
+                cart.qty = 5;
+                cart.total_pCost = (cart.qty * cart.price);
+
+                fwrite(&cart, sizeof(struct Cart), 1, od);
+            }
+            else
+            {
+                puts("Error");
+            }
+        }
+    }
 }
